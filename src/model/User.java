@@ -1,30 +1,37 @@
 package model;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class User {
-    private Long id;
+    private UUID id;
+    private String cpf;
     private String name;
-    private BigDecimal saldo;
+    private BigDecimal balance;
     private String number;
-    private char[] password;
+    private String password;
 
     public User() {}
 
-    public User(Long id, String name, BigDecimal saldo, String number, char[] password) {
-        this.id = id;
+    public User(String cpf, String name, String number, String password) {
+        this.id = UUID.randomUUID();
+        this.cpf = cpf;
         this.name = name;
-        this.saldo = BigDecimal.ZERO;
+        this.balance = BigDecimal.ZERO;
         this.number = number;
         this.password = password;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getName() {
@@ -35,12 +42,12 @@ public class User {
         this.name = name;
     }
 
-    public BigDecimal getSaldo() {
-        return saldo;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public void setSaldo(BigDecimal saldo) {
-        this.saldo = saldo;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     public String getNumber() {
@@ -51,11 +58,28 @@ public class User {
         this.number = number;
     }
 
-    public char[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(char[] password) {
+    public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void deposit(BigDecimal value) {
+        if(value.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor inválido.");
+        }
+        setBalance(getBalance().add(value));
+    }
+
+    public void withdraw(BigDecimal value) {
+        if (value.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor inváido.");
+        }
+        if (value.compareTo(getBalance()) > 0) {
+            throw new IllegalArgumentException("saldo insuficiente.");
+        }
+        setBalance(getBalance().subtract(value));
     }
 }
